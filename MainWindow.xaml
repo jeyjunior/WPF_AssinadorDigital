@@ -45,6 +45,16 @@
             VerticalAlignment="Bottom"
             Click="btnObterCertificado_Click"
             Content="Obter Certificado" />
+        <Button
+            x:Name="btnObterCertificadoInstalado"
+            Grid.Column="2"
+            Width="159"
+            Height="54"
+            Margin="197,0,0,30"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Bottom"
+            Click="btnObterCertificadoInstalado_Click"
+            Content="Obter Certificado Instalado" />
 
     </Grid>
 </Window>

@@ -60,6 +60,8 @@ namespace GerenciadorCertificados
             };
 
             var result = tCertificadoRepositorio.Adicionar(certificado);
+
+            MessageBox.Show(result ? $"Certificado adicionado com sucesso!" : "Falha ao salvar certificado");
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -69,15 +71,48 @@ namespace GerenciadorCertificados
 
         private void btnObterCertificado_Click(object sender, RoutedEventArgs e)
         {
-            var certificadoCollection = tCertificadoRepositorio.ObterTabela().FirstOrDefault();
+            var certificadoCollection = tCertificadoRepositorio.ObterTabela();
 
             if(certificadoCollection == null) return;
 
-            var certificado = new X509Certificate2(certificadoCollection.Certificado, certificadoCollection.Senha);
-
-            if(certificado != null)
+            foreach (var item in certificadoCollection)
             {
-                var privateKey = certificado.GetRSAPrivateKey();
+                var certificado = new X509Certificate2(item.Certificado, "1234");
+
+                if (certificado != null)
+                {
+                    var privateKey = certificado.GetRSAPrivateKey();
+                }
+            }
+
+        }
+
+        private void btnObterCertificadoInstalado_Click(object sender, RoutedEventArgs e)
+        {
+            X509Store x509Store = new X509Store(StoreName.My, StoreLocation.CurrentUser);
+            x509Store.Open(OpenFlags.ReadOnly);
+
+            var x509 = x509Store.Certificates.Where(i => i.Subject.Contains("Wayne Enterprises, Inc")).FirstOrDefault();
+            
+            if(x509 != null)
+            {
+                var certificado = new TCertificado()
+                {
+                    NomeCertificado = x509.FriendlyName,
+                    CPF = "1234567890",
+                    EmissorTipoO = "Lacuna Software",
+                    Certificado = x509.Export(X509ContentType.Pkcs12),
+                    Emissor = "Lacuna CA Test v1",
+                    ChavePublica = x509.GetPublicKeyString(),
+                    Email = "teste@teste.com.br",
+                    DataValidade = DateTime.Today.AddDays(180),
+                    Senha = "1234",
+                    ChavePrivada = null,
+                };
+
+                var result = tCertificadoRepositorio.Adicionar(certificado);
+
+                MessageBox.Show(result ? $"Certificado adicionado com sucesso!" : "Falha ao salvar certificado");
             }
         }
     }

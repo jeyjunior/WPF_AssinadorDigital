@@ -109,7 +109,11 @@ namespace GerenciadorCertificados
 
         private void btnAssinarPDF_Click(object sender, RoutedEventArgs e)
         {
-
+            //Selecionar certificado da base para assinar
+            //Selecionar pdf local para assinar
+            //Realizar as validações
+            //Assinar documento
+            //Exibir arquivo assinado em um novo dtg?
         }
     }
 }

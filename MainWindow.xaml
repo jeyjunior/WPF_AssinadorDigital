@@ -10,51 +10,129 @@
     Height="450"
     Loaded="Window_Loaded"
     mc:Ignorable="d">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="107*" />
-            <ColumnDefinition Width="190*" />
-            <ColumnDefinition Width="503*" />
-        </Grid.ColumnDefinitions>
-        <Button
-            x:Name="btnAdicionarCertificado"
-            Grid.ColumnSpan="2"
-            Width="159"
-            Height="54"
-            Margin="82,0,0,30"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Bottom"
-            Click="btnAdicionarCertificado_Click"
-            Content="Adicionar Certificado" />
-        <Grid
-            Grid.ColumnSpan="3"
-            Margin="81,62,81,108"
-            Background="#FFDEDEDE"
-            ShowGridLines="True">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="2*" />
-            </Grid.RowDefinitions>
-        </Grid>
-        <Button
-            x:Name="btnObterCertificado"
-            Grid.Column="2"
-            Width="159"
-            Height="54"
-            Margin="0,0,0,30"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Bottom"
-            Click="btnObterCertificado_Click"
-            Content="Obter Certificado" />
-        <Button
-            x:Name="btnObterCertificadoInstalado"
-            Grid.Column="2"
-            Width="159"
-            Height="54"
-            Margin="197,0,0,30"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Bottom"
-            Click="btnObterCertificadoInstalado_Click"
-            Content="Obter Certificado Instalado" />
 
+    <Window.Resources>
+        <Style x:Key="TxbPadrao" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Foreground" Value="White" />
+            <!--<Setter Property="FontWeight" Value="Bold" />-->
+        </Style>
+
+        <Style x:Key="BtnEstiloPadrao" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                            Width="150"
+                            Height="50"
+                            Margin="10, 20"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Bottom"
+                            Background="#2d256e"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="10">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
+        <Style x:Key="BtnEstiloDestaque" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                            Width="150"
+                            Height="50"
+                            Margin="10, 20"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Bottom"
+                            Background="#db8a2e"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="10">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </Window.Resources>
+    <Grid x:Name="MainGrid" ShowGridLines="True" Height="434" VerticalAlignment="Center">
+        <!--  Definindo duas linhas  -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" MinHeight="300" />
+            <RowDefinition Height="50" MinHeight="50" />
+            <RowDefinition Height="Auto" MinHeight="50" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <DataGrid
+            x:Name="dtgCertificados"
+            Grid.Row="0"
+            Grid.Column="0"
+            AutoGenerateColumns="True"
+            CanUserSortColumns="False">
+            <!--  Remove as colunas manualmente definidas  -->
+        </DataGrid>
+
+        <Grid
+            x:Name="BtnGrid"
+            Grid.Row="2"
+            Grid.Column="0"
+            HorizontalAlignment="Center">
+            <!--  Definindo quatro colunas para a segunda linha  -->
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200*" MinWidth="150" />
+                <ColumnDefinition Width="200*" MinWidth="150" />
+                <ColumnDefinition Width="200*" MinWidth="150" />
+                <ColumnDefinition Width="200*" MinWidth="150" />
+            </Grid.ColumnDefinitions>
+
+
+
+            <Button
+                x:Name="btnAdicionarCertificado"
+                Grid.Column="0"
+                HorizontalAlignment="Center"
+                Click="btnAdicionarCertificado_Click"
+                Style="{StaticResource BtnEstiloPadrao}">
+                <TextBlock Style="{StaticResource TxbPadrao}" Text="Add Certificado" />
+            </Button>
+
+            <Button
+                x:Name="btnAdicionarCertificadoInstalado"
+                Grid.Column="1"
+                Click="btnAdicionarCertificadoInstalado_Click"
+                Style="{StaticResource BtnEstiloPadrao}">
+                <TextBlock Style="{StaticResource TxbPadrao}" Text="Add Certificado Instalado" />
+            </Button>
+
+            <Button
+                x:Name="btnAssinarPDF"
+                Grid.Column="3"
+                Click="btnAssinarPDF_Click"
+                Style="{StaticResource BtnEstiloDestaque}">
+                <TextBlock Style="{StaticResource TxbPadrao}" Text="Assinar PDF" />
+            </Button>
+
+            <Button
+                x:Name="btnAtualizarGrid"
+                Grid.Column="2"
+                Click="btnAtualizarGrid_Click"
+                Style="{StaticResource BtnEstiloPadrao}">
+                <TextBlock Style="{StaticResource TxbPadrao}" Text="Atualizar grid" />
+            </Button>
+
+
+        </Grid>
     </Grid>
 </Window>

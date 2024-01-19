@@ -29,6 +29,10 @@ namespace GerenciadorCertificados
 
             tCertificadoRepositorio = DISetup.DISetup.Container.GetInstance<ITCertificadoRepositorio>();
         }
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
 
         private void btnAdicionarCertificado_Click(object sender, RoutedEventArgs e)
         {
@@ -64,37 +68,14 @@ namespace GerenciadorCertificados
             MessageBox.Show(result ? $"Certificado adicionado com sucesso!" : "Falha ao salvar certificado");
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void btnObterCertificado_Click(object sender, RoutedEventArgs e)
-        {
-            var certificadoCollection = tCertificadoRepositorio.ObterTabela();
-
-            if(certificadoCollection == null) return;
-
-            foreach (var item in certificadoCollection)
-            {
-                var certificado = new X509Certificate2(item.Certificado, "1234");
-
-                if (certificado != null)
-                {
-                    var privateKey = certificado.GetRSAPrivateKey();
-                }
-            }
-
-        }
-
-        private void btnObterCertificadoInstalado_Click(object sender, RoutedEventArgs e)
+        private void btnAdicionarCertificadoInstalado_Click(object sender, RoutedEventArgs e)
         {
             X509Store x509Store = new X509Store(StoreName.My, StoreLocation.CurrentUser);
             x509Store.Open(OpenFlags.ReadOnly);
 
             var x509 = x509Store.Certificates.Where(i => i.Subject.Contains("Wayne Enterprises, Inc")).FirstOrDefault();
-            
-            if(x509 != null)
+
+            if (x509 != null)
             {
                 var certificado = new TCertificado()
                 {
@@ -114,6 +95,21 @@ namespace GerenciadorCertificados
 
                 MessageBox.Show(result ? $"Certificado adicionado com sucesso!" : "Falha ao salvar certificado");
             }
+        }
+
+
+        private void btnAtualizarGrid_Click(object sender, RoutedEventArgs e)
+        {
+            var certificadoCollection = tCertificadoRepositorio.ObterTabela();
+
+            if (certificadoCollection == null) return;
+
+            dtgCertificados.ItemsSource = certificadoCollection;
+        }
+
+        private void btnAssinarPDF_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

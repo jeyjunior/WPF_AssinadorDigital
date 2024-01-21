@@ -87,7 +87,7 @@
         </Grid.ColumnDefinitions>
 
         <Grid
-            x:Name="Dtgs"
+            x:Name="DataGrids"
             Grid.Row="1"
             Grid.Column="1"
             HorizontalAlignment="Stretch"
@@ -123,7 +123,42 @@
         </Grid>
 
         <Grid
-            x:Name="BtnGrid"
+            x:Name="TextItensSelecionados"
+            Grid.Row="3"
+            Grid.Column="1"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200*" MinWidth="200" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="200*" MinWidth="200" />
+            </Grid.ColumnDefinitions>
+
+            <Label
+                x:Name="lblCertificadoSelecionado"
+                Grid.Column="0"
+                VerticalAlignment="Center">
+                <TextBlock
+                    FontSize="13"
+                    Foreground="Gray"
+                    Text="Certificado:"
+                    TextAlignment="Left" />
+            </Label>
+
+            <Label
+                x:Name="lblPDFSelecionado"
+                Grid.Column="2"
+                VerticalAlignment="Center">
+                <TextBlock
+                    FontSize="13"
+                    Foreground="Gray"
+                    Text="PDF:"
+                    TextAlignment="Left" />
+            </Label>
+        </Grid>
+
+        <Grid
+            x:Name="Botoes"
             Grid.Row="5"
             Grid.Column="1"
             HorizontalAlignment="Stretch">
@@ -174,7 +209,7 @@
                 Style="{StaticResource BtnEstiloDestaque}">
                 <TextBlock Style="{StaticResource TxbPadrao}" Text="Verificar  Assinatura" />
             </Button>
-            
+
             <Button
                 x:Name="btnAssinarPDF"
                 Grid.Column="5"

@@ -36,36 +36,53 @@ namespace GerenciadorCertificados
 
         private void btnAdicionarCertificado_Click(object sender, RoutedEventArgs e)
         {
-            var dialog = new OpenFileDialog();
+            var certificado = new TCertificado();
 
-            dialog.Title = "Selecione um certificado";
-            dialog.Filter = "Certificados (*.pfx;*.cer;*.pkcs12;*.pkcs7)|*.pfx;*.cer;*.pkcs12;*.pkcs7";
-
-            var resultado = dialog.ShowDialog();
-
-            if (resultado != true)
-                return;
-
-            var certificadoByte = File.ReadAllBytes(dialog.FileName);
-            var x509 = new X509Certificate2(certificadoByte, "1234");
-
-            var certificado = new TCertificado()
+            try
             {
-                NomeCertificado = x509.FriendlyName,
-                CPF = "1234567890",
-                EmissorTipoO = "Lacuna Software",
-                Certificado = certificadoByte,
-                Emissor = "Lacuna CA Test v1",
-                ChavePublica = x509.GetPublicKeyString(),
-                Email = "teste@teste.com.br",
-                DataValidade = DateTime.Today.AddDays(180),
-                Senha = "1234",
-                ChavePrivada = null,
-            };
+                var dialog = new OpenFileDialog();
 
-            var result = tCertificadoRepositorio.Adicionar(certificado);
+                dialog.Title = "Selecione um certificado";
+                dialog.Filter = "Certificados (*.pfx;*.cer;*.pkcs12;*.pkcs7)|*.pfx;*.cer;*.pkcs12;*.pkcs7";
 
-            MessageBox.Show(result ? $"Certificado adicionado com sucesso!" : "Falha ao salvar certificado");
+                var resultado = dialog.ShowDialog();
+
+                if (resultado != true)
+                    return;
+
+                var certificadoByte = File.ReadAllBytes(dialog.FileName);
+                var x509 = new X509Certificate2(certificadoByte, "1234");
+
+                certificado.NomeCertificado = x509.FriendlyName;
+                certificado.CPF = "1234567890";
+                certificado.EmissorTipoO = "Lacuna Software";
+                certificado.Certificado = certificadoByte;
+                certificado.Emissor = "Lacuna CA Test v1";
+                certificado.ChavePublica = x509.GetPublicKeyString();
+                certificado.Email = "teste@teste.com.br";
+                certificado.DataValidade = DateTime.Today.AddDays(180);
+                certificado.Senha = "1234";
+                certificado.ChavePrivada = null;
+
+                var result = tCertificadoRepositorio.Adicionar(certificado);
+
+                if (result)
+                {
+                    MessageBox.Show("Certificado adicionado com sucesso!");
+                }
+                else
+                {
+                    if (certificado.ValidationErrors.Count > 0)
+                        MessageBox.Show(certificado.ValidationErrors[0]);
+                }
+            }
+            catch (Exception ex)
+            {
+                if (certificado.ValidationErrors.Count > 0)
+                    MessageBox.Show(certificado.ValidationErrors[0]);
+                else
+                    MessageBox.Show(ex.Message);
+            }
         }
 
         //Nao utilizar

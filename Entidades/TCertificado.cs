@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace GerenciadorCertificados.Entidades
 {
@@ -19,5 +20,7 @@ namespace GerenciadorCertificados.Entidades
         public string EmissorTipoO { get; set; }
         public DateTime? DataValidade { get; set; }
         public byte[] Certificado { get; set; }
+
+        public List<string> ValidationErrors { get; set; } = new List<string>();
     }
 }

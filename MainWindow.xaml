@@ -7,8 +7,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="MainWindow"
     Width="800"
-    MinWidth="800"
     Height="450"
+    MinWidth="800"
     MinHeight="450"
     Loaded="Window_Loaded"
     mc:Ignorable="d">
@@ -27,15 +27,15 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Border
-                            Width="150"
-                            Height="50"
-                            Margin="2, 10"
+                            Width="120"
+                            Height="40"
                             HorizontalAlignment="Left"
-                            VerticalAlignment="Bottom"
+                            VerticalAlignment="Center"
                             Background="#2d256e"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="10">
+                            CornerRadius="10"
+                            Cursor="Hand">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
                     </ControlTemplate>
@@ -49,15 +49,15 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Border
-                            Width="150"
-                            Height="50"
-                            Margin="0, 10"
+                            Width="120"
+                            Height="40"
                             HorizontalAlignment="Left"
-                            VerticalAlignment="Bottom"
+                            VerticalAlignment="Center"
                             Background="#db8a2e"
                             BorderBrush="{TemplateBinding BorderBrush}"
                             BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="10">
+                            CornerRadius="10"
+                            Cursor="Hand">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
                     </ControlTemplate>
@@ -66,42 +66,75 @@
         </Style>
 
     </Window.Resources>
-    <Grid x:Name="MainGrid" ShowGridLines="True"  VerticalAlignment="Stretch">
+    <Grid
+        x:Name="MainGrid"
+        VerticalAlignment="Stretch"
+        ShowGridLines="True">
         <!--  Linhas  -->
         <Grid.RowDefinitions>
             <RowDefinition Height="20" MinHeight="20" />
             <RowDefinition Height="*" />
             <RowDefinition Height="10" MinHeight="10" />
-            <RowDefinition Height="70" MinHeight="70" />
-            <RowDefinition Height="20" MinHeight="20"  />
+            <RowDefinition Height="30" MinHeight="10" />
+            <RowDefinition Height="10" MinHeight="10" />
+            <RowDefinition Height="50" MinHeight="50" />
+            <RowDefinition Height="20" MinHeight="20" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="20" />
-            <ColumnDefinition Width="*" MinWidth="740"/>
+            <ColumnDefinition Width="*" MinWidth="740" />
             <ColumnDefinition Width="20" />
         </Grid.ColumnDefinitions>
 
-        <DataGrid
-            x:Name="dtgCertificados"
+        <Grid
+            x:Name="Dtgs"
             Grid.Row="1"
             Grid.Column="1"
-            IsReadOnly="True"
-            AutoGenerateColumns="True"
-            CanUserSortColumns="False">
-            <!--  Remove as colunas manualmente definidas  -->
-        </DataGrid>
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200*" MinWidth="200" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="200*" MinWidth="200" />
+            </Grid.ColumnDefinitions>
+
+            <DataGrid
+                x:Name="dtgCertificados"
+                Grid.Column="0"
+                HorizontalAlignment="Stretch"
+                AutoGenerateColumns="True"
+                CanUserSortColumns="False"
+                IsReadOnly="True">
+                <!--  Remove as colunas manualmente definidas  -->
+            </DataGrid>
+
+            <!--  Coluna de separação  -->
+
+            <DataGrid
+                x:Name="dtgPDF"
+                Grid.Column="2"
+                HorizontalAlignment="Stretch"
+                AutoGenerateColumns="True"
+                CanUserSortColumns="False"
+                IsReadOnly="True">
+                <!--  Remove as colunas manualmente definidas  -->
+            </DataGrid>
+
+        </Grid>
 
         <Grid
             x:Name="BtnGrid"
-            Grid.Row="3"
+            Grid.Row="5"
             Grid.Column="1"
-            HorizontalAlignment="right">
+            HorizontalAlignment="Stretch">
             <!--  Definindo quatro colunas para a segunda linha  -->
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="200*" MinWidth="160" />
-                <ColumnDefinition Width="200*" MinWidth="160" />
-                <ColumnDefinition Width="200*" MinWidth="160" />
-                <ColumnDefinition Width="200*" MinWidth="160" />
+                <ColumnDefinition Width="125" MinWidth="125" />
+                <ColumnDefinition Width="125" MinWidth="125" />
+                <ColumnDefinition Width="125" MinWidth="125" />
+                <ColumnDefinition Width="10*" MinWidth="10" />
+                <ColumnDefinition Width="125" MinWidth="125" />
+                <ColumnDefinition Width="125" MinWidth="125" />
             </Grid.ColumnDefinitions>
 
 
@@ -116,25 +149,36 @@
             </Button>
 
             <Button
-                x:Name="btnAdicionarCertificadoInstalado"
+                x:Name="btnAdicionarPDF"
                 Grid.Column="1"
-                Click="btnAdicionarCertificadoInstalado_Click"
+                HorizontalAlignment="Center"
+                Click="btnAdicionarPDF_Click"
                 Style="{StaticResource BtnEstiloPadrao}">
-                <TextBlock Style="{StaticResource TxbPadrao}" Text="Add Certificado Instalado" />
+                <TextBlock Style="{StaticResource TxbPadrao}" Text="Add PDF" />
             </Button>
-
 
             <Button
                 x:Name="btnAtualizarGrid"
                 Grid.Column="2"
+                HorizontalAlignment="Center"
                 Click="btnAtualizarGrid_Click"
                 Style="{StaticResource BtnEstiloPadrao}">
-                <TextBlock Style="{StaticResource TxbPadrao}" Text="Atualizar grid" />
+                <TextBlock Style="{StaticResource TxbPadrao}" Text="Atualizar" />
             </Button>
 
             <Button
+                x:Name="btnVerificarAssinatura"
+                Grid.Column="4"
+                HorizontalAlignment="Center"
+                Click="btnVerificarAssinatura_Click"
+                Style="{StaticResource BtnEstiloDestaque}">
+                <TextBlock Style="{StaticResource TxbPadrao}" Text="Verificar  Assinatura" />
+            </Button>
+            
+            <Button
                 x:Name="btnAssinarPDF"
-                Grid.Column="3"
+                Grid.Column="5"
+                HorizontalAlignment="Center"
                 Click="btnAssinarPDF_Click"
                 Style="{StaticResource BtnEstiloDestaque}">
                 <TextBlock Style="{StaticResource TxbPadrao}" Text="Assinar PDF" />

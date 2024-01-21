@@ -68,6 +68,7 @@ namespace GerenciadorCertificados
             MessageBox.Show(result ? $"Certificado adicionado com sucesso!" : "Falha ao salvar certificado");
         }
 
+        //Nao utilizar
         private void btnAdicionarCertificadoInstalado_Click(object sender, RoutedEventArgs e)
         {
             X509Store x509Store = new X509Store(StoreName.My, StoreLocation.CurrentUser);
@@ -109,11 +110,21 @@ namespace GerenciadorCertificados
 
         private void btnAssinarPDF_Click(object sender, RoutedEventArgs e)
         {
-            //Selecionar certificado da base para assinar
-            //Selecionar pdf local para assinar
+            //Obtem o certificado e o pdf dos respectivos grids
             //Realizar as validações
             //Assinar documento
-            //Exibir arquivo assinado em um novo dtg?
+            //Exibir msg informando se o doc foi ou não assinado
+        }
+
+        private void btnAdicionarPDF_Click(object sender, RoutedEventArgs e)
+        {
+            //Selecionar o documento (Referencia em memoria)
+            //Exibir dados do documento selecionado no dtg
+        }
+
+        private void btnVerificarAssinatura_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

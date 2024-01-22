@@ -77,40 +77,60 @@ namespace GerenciadorCertificados.Repositorio
 
         public IEnumerable<TCertificado> ObterTabela(TCertificado certificado)
         {
-            string where = "";
-
-            if (certificado != null)
+            try
             {
-                if (certificado.PK_Certificado > 0)
+                string where = "";
+
+                if (certificado != null)
                 {
-                    where += (where.Trim() == "" ? " WHERE " : " AND ") + "PK_Certificado = @PK_Certificado";
+                    if (certificado.PK_Certificado > 0)
+                    {
+                        where += (where.Trim() == "" ? " WHERE " : " AND ") + "PK_Certificado = @PK_Certificado";
+                    }
+
+                    if (!string.IsNullOrEmpty(certificado.NomeCertificado))
+                    {
+                        where += (where.Trim() == "" ? " WHERE " : " AND ") + "NomeCertificado = @NomeCertificado COLLATE Latin1_General_CI_AI";
+                    }
+
+                    if (!string.IsNullOrEmpty(certificado.CPF))
+                    {
+                        where += (where.Trim() == "" ? " WHERE " : " AND ") + "CPF = @CPF COLLATE Latin1_General_CI_AI";
+                    }
+
+                    if (!string.IsNullOrEmpty(certificado.ChavePublica))
+                    {
+                        where += (where.Trim() == "" ? " WHERE " : " AND ") + "ChavePublica = @ChavePublica COLLATE Latin1_General_CI_AI";
+                    }
                 }
 
-                if (!string.IsNullOrEmpty(certificado.NomeCertificado))
-                {
-                    where += (where.Trim() == "" ? " WHERE " : " AND ") + "NomeCertificado = @NomeCertificado COLLATE Latin1_General_CI_AI";
-                }
+                string sql = $"SELECT * FROM TCertificado {where}";
 
-                if (!string.IsNullOrEmpty(certificado.CPF))
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    where += (where.Trim() == "" ? " WHERE " : " AND ") + "CPF = @CPF COLLATE Latin1_General_CI_AI";
-                }
+                    connection.Open();
 
-                if (!string.IsNullOrEmpty(certificado.ChavePublica))
-                {
-                    where += (where.Trim() == "" ? " WHERE " : " AND ") + "ChavePublica = @ChavePublica COLLATE Latin1_General_CI_AI";
+                    var resultado = connection.Query<TCertificado>(sql, certificado);
+
+                    if (resultado == null || resultado.Count() <= 0)
+                    {
+                            certificado.ValidationErrors.Add("Nenhum certificado encontrado");
+
+                        return null;
+                    }
+                    else
+                        return resultado;
                 }
             }
-
-            string sql = $"SELECT * FROM TCertificado {where}";
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            catch (SqlException sqlException)
             {
-                connection.Open();
-
-                IEnumerable<TCertificado> resultado = connection.Query<TCertificado>(sql, certificado);
-
-                return resultado;
+                certificado.ValidationErrors.Add($"Erro: {sqlException.Message}");
+                return null;
+            }
+            catch (Exception ex)
+            {
+                certificado.ValidationErrors.Add($"Erro: {ex.Message}");
+                return null;
             }
         }
 

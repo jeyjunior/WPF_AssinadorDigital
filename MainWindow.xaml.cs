@@ -1,6 +1,7 @@
 ﻿using GerenciadorCertificados.Entidades;
 using GerenciadorCertificados.Interfaces;
 using Microsoft.Win32;
+using System.Data;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -70,7 +71,7 @@ namespace GerenciadorCertificados
                 {
                     MessageBox.Show("Certificado adicionado com sucesso!");
                 }
-                else
+                else if (!certificado.IsValid)
                 {
                     if (certificado.ValidationErrors.Count > 0)
                         MessageBox.Show(certificado.ValidationErrors[0]);
@@ -120,7 +121,10 @@ namespace GerenciadorCertificados
         {
             var certificadoCollection = tCertificadoRepositorio.ObterTabela();
 
-            if (certificadoCollection == null) return;
+            if (certificadoCollection == null) 
+            {
+                MessageBox.Show("Nenhum certificado encontrado");
+            };
 
             dtgCertificados.ItemsSource = certificadoCollection;
         }
@@ -142,6 +146,30 @@ namespace GerenciadorCertificados
         private void btnVerificarAssinatura_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+
+        private void dtgCertificados_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if(dtgCertificados.Items.Count <= 0)
+            {
+                lblCertificadoSelecionado.Content = "Certificado: ";
+                e.Handled = true;
+            }
+
+            var certificado = (TCertificado)dtgCertificados.SelectedItem;
+
+            TextBlock textBlock = new TextBlock
+            {
+                Style = (Style)Resources["lblItemSelecionado"],
+            };
+
+            if (certificado != null)
+                textBlock.Text = $"Certificado: {certificado.NomeCertificado}, {certificado.CPF}";
+            else
+                textBlock.Text = "Certificado: ";
+
+            lblCertificadoSelecionado.Content = textBlock;
         }
     }
 }

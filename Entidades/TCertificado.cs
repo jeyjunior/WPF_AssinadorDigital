@@ -22,5 +22,15 @@ namespace GerenciadorCertificados.Entidades
         public byte[] Certificado { get; set; }
 
         public List<string> ValidationErrors { get; set; } = new List<string>();
+        public bool IsValid
+        {
+            get
+            {
+                if (CPF != "" && CPF.Length > 11)
+                    ValidationErrors.Add("CPF Inválido");
+
+                return ValidationErrors.Count == 0;
+            }
+        }
     }
 }

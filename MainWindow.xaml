@@ -22,6 +22,18 @@
             <!--<Setter Property="FontWeight" Value="Bold" />-->
         </Style>
 
+        <Style x:Key="dtgColumnHeaderStyle" TargetType="DataGridColumnHeader">
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+        </Style>
+
+        <Style x:Key="lblItemSelecionado" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Foreground" Value="Gray" />
+            <!--<Setter Property="FontWeight" Value="Bold" />-->
+        </Style>
+
         <Style x:Key="BtnEstiloPadrao" TargetType="Button">
             <Setter Property="Template">
                 <Setter.Value>
@@ -102,10 +114,67 @@
                 x:Name="dtgCertificados"
                 Grid.Column="0"
                 HorizontalAlignment="Stretch"
-                AutoGenerateColumns="True"
+                AutoGenerateColumns="False"
                 CanUserSortColumns="False"
-                IsReadOnly="True">
-                <!--  Remove as colunas manualmente definidas  -->
+                IsReadOnly="True"
+                SelectionChanged="dtgCertificados_SelectionChanged">
+
+                <DataGrid.Resources>
+                    <Style BasedOn="{StaticResource dtgColumnHeaderStyle}" TargetType="DataGridColumnHeader" />
+                </DataGrid.Resources>
+
+                <DataGrid.Columns>
+                    <DataGridTextColumn
+                        Width="50"
+                        Binding="{Binding PK_Certificado}"
+                        Header="ID"
+                        Visibility="Hidden" />
+                    <DataGridTextColumn
+                        Width="100*"
+                        MinWidth="100"
+                        Binding="{Binding NomeCertificado}"
+                        Header="Nome"
+                        Visibility="Visible" />
+                    <DataGridTextColumn
+                        Width="90"
+                        MinWidth="90"
+                        MaxWidth="90"
+                        Binding="{Binding CPF}"
+                        Header="CPF"
+                        Visibility="Visible" />
+                    <DataGridTextColumn
+                        Width="120"
+                        MinWidth="120"
+                        Binding="{Binding Email}"
+                        Header="Email"
+                        Visibility="Visible" />
+                    <DataGridTextColumn
+                        Width="100"
+                        MinWidth="100"
+                        MaxWidth="100"
+                        Binding="{Binding ChavePublica}"
+                        Header="Chave pública"
+                        Visibility="Hidden" />
+                    <DataGridTextColumn
+                        Width="100"
+                        MinWidth="100"
+                        Binding="{Binding Emissor}"
+                        Header="Emissor"
+                        Visibility="Visible" />
+                    <DataGridTextColumn
+                        Width="120"
+                        MinWidth="120"
+                        Binding="{Binding EmissorTipoO}"
+                        Header="EmissorTipoO"
+                        Visibility="Visible" />
+                    <DataGridTextColumn
+                        Width="110"
+                        MinWidth="110"
+                        MaxWidth="110"
+                        Binding="{Binding DataValidade}"
+                        Header="Data Validade"
+                        Visibility="Visible" />
+                </DataGrid.Columns>
             </DataGrid>
 
             <!--  Coluna de separação  -->

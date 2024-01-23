@@ -1,5 +1,6 @@
 ﻿using GerenciadorCertificados.Entidades;
 using GerenciadorCertificados.Interfaces;
+using GerenciadorCertificados.Model;
 using Microsoft.Win32;
 using System.Data;
 using System.IO;
@@ -23,12 +24,14 @@ namespace GerenciadorCertificados
     public partial class MainWindow : Window
     {
         private readonly ITCertificadoRepositorio tCertificadoRepositorio;
+        private List<PDF> pDFCollectin;
 
         public MainWindow()
         {
             InitializeComponent();
 
             tCertificadoRepositorio = DISetup.DISetup.Container.GetInstance<ITCertificadoRepositorio>();
+            pDFCollectin = new List<PDF>();
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -116,7 +119,6 @@ namespace GerenciadorCertificados
             }
         }
 
-
         private void btnAtualizarGrid_Click(object sender, RoutedEventArgs e)
         {
             var certificadoCollection = tCertificadoRepositorio.ObterTabela();
@@ -139,6 +141,39 @@ namespace GerenciadorCertificados
 
         private void btnAdicionarPDF_Click(object sender, RoutedEventArgs e)
         {
+            var dialog = new OpenFileDialog();
+            dialog.Title = "Selecione arquivo PDF";
+            dialog.Filter = "Arquivos PDF|*.pdf";
+            dialog.Multiselect = true;
+
+            var result = dialog.ShowDialog();
+
+            if (result != null && result is bool == false)
+                return;
+
+            var arquivos = dialog.FileNames;
+
+            foreach (var item in arquivos)
+            {
+                //C:\Users\jeyjr\Desktop\del\pdf para assinar\001.pdf
+                var indiceNome = item.LastIndexOf("\\");
+                var indiceFormato = item.LastIndexOf(".");
+                
+                var nome = item.Substring(indiceNome + 1);
+                var formato = item.Substring(indiceFormato + 1);
+
+                var pdf = new PDF
+                {
+                    Caminho = item,
+                    Nome = nome,
+                    Formato = formato,
+                    Assinado = false
+                };
+
+                pDFCollectin.Add(pdf);
+            }
+
+            dtgPDF.ItemsSource = pDFCollectin;
             //Selecionar o documento (Referencia em memoria)
             //Exibir dados do documento selecionado no dtg
         }

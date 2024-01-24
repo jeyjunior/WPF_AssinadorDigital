@@ -132,7 +132,7 @@
                     <DataGridTextColumn
                         Width="100*"
                         MinWidth="100"
-                        Binding="{Binding NomeCertificado}"
+                        Binding="{Binding Nome}"
                         Header="Nome"
                         Visibility="Visible" />
                     <DataGridTextColumn
@@ -183,10 +183,46 @@
                 x:Name="dtgPDF"
                 Grid.Column="2"
                 HorizontalAlignment="Stretch"
-                AutoGenerateColumns="True"
+                AutoGenerateColumns="false"
                 CanUserSortColumns="False"
-                IsReadOnly="True">
-                <!--  Remove as colunas manualmente definidas  -->
+                IsReadOnly="True"
+                SelectionChanged="dtgPDF_SelectionChanged">
+
+                <DataGrid.Resources>
+                    <Style BasedOn="{StaticResource dtgColumnHeaderStyle}" TargetType="DataGridColumnHeader" />
+                </DataGrid.Resources>
+
+                <DataGrid.Columns>
+                    <DataGridTextColumn
+                        Width="60"
+                        MinWidth="60"
+                        MaxWidth="60"
+                        Binding="{Binding Assinado}"
+                        Header="Assinado"
+                        Visibility="Visible" />
+
+                    <DataGridTextColumn
+                        Width="100*"
+                        MinWidth="100"
+                        Binding="{Binding Nome}"
+                        Header="Nome"
+                        Visibility="Visible" />
+
+                    <DataGridTextColumn
+                        Width="60"
+                        MinWidth="60"
+                        MaxWidth="60"
+                        Binding="{Binding Formato}"
+                        Header="Formato"
+                        Visibility="Visible" />
+
+                    <DataGridTextColumn
+                        Width="100"
+                        MinWidth="100"
+                        Binding="{Binding Caminho}"
+                        Header="Caminho"
+                        Visibility="Visible" />
+                </DataGrid.Columns>
             </DataGrid>
 
         </Grid>
@@ -221,7 +257,7 @@
                 <TextBlock
                     FontSize="13"
                     Foreground="Gray"
-                    Text="PDF:"
+                    Text="Arquivo: "
                     TextAlignment="Left" />
             </Label>
         </Grid>

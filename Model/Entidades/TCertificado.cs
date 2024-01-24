@@ -10,7 +10,7 @@ namespace GerenciadorCertificados.Entidades
     public class TCertificado
     {
         public int PK_Certificado { get; set; }
-        public string NomeCertificado { get; set; }
+        public string Nome { get; set; }
         public string CPF { get; set; }
         public string Email { get; set; }
         public string Senha { get; set; }

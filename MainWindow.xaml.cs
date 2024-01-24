@@ -18,9 +18,6 @@ using System.Windows.Shapes;
 
 namespace GerenciadorCertificados
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         private readonly ITCertificadoRepositorio tCertificadoRepositorio;
@@ -40,52 +37,77 @@ namespace GerenciadorCertificados
 
         private void btnAdicionarCertificado_Click(object sender, RoutedEventArgs e)
         {
-            var certificado = new TCertificado();
-
             try
             {
                 var dialog = new OpenFileDialog();
 
                 dialog.Title = "Selecione um certificado";
                 dialog.Filter = "Certificados (*.pfx;*.cer;*.pkcs12;*.pkcs7)|*.pfx;*.cer;*.pkcs12;*.pkcs7";
+                dialog.Multiselect = true;
 
                 var resultado = dialog.ShowDialog();
 
                 if (resultado != true)
                     return;
 
-                var certificadoByte = File.ReadAllBytes(dialog.FileName);
-                var x509 = new X509Certificate2(certificadoByte, "1234");
+                var arquivos = dialog.FileNames;
 
-                certificado.NomeCertificado = x509.FriendlyName;
-                certificado.CPF = "1234567890";
-                certificado.EmissorTipoO = "Lacuna Software";
-                certificado.Certificado = certificadoByte;
-                certificado.Emissor = "Lacuna CA Test v1";
-                certificado.ChavePublica = x509.GetPublicKeyString();
-                certificado.Email = "teste@teste.com.br";
-                certificado.DataValidade = DateTime.Today.AddDays(180);
-                certificado.Senha = "1234";
-                certificado.ChavePrivada = null;
+                var certificados = arquivos.Select(i => File.ReadAllBytes(i))
+                                           .Select(i => new X509Certificate2(i, "1234"))
+                                           .Select(i => new TCertificado
+                                           {
+                                               Nome = i.FriendlyName,
+                                               CPF = "1234567890",
+                                               EmissorTipoO = "Lacuna Software",
+                                               Certificado = i.GetRawCertData(),
+                                               Emissor = "Lacuna CA Test v1",
+                                               ChavePublica = i.GetPublicKeyString(),
+                                               Email = "teste@teste.com.br",
+                                               DataValidade = DateTime.Today.AddDays(180),
+                                               Senha = "1234",
+                                               ChavePrivada = null,
+                                           })
+                                           .ToList();
 
-                var result = tCertificadoRepositorio.Adicionar(certificado);
+                int qtd = 0;
 
-                if (result)
+                for (int i = 0; i < certificados.Count; i++)
                 {
-                    MessageBox.Show("Certificado adicionado com sucesso!");
+                    var result = tCertificadoRepositorio.Adicionar(certificados[i]);
+
+                    if (result)
+                        qtd++;
                 }
-                else if (!certificado.IsValid)
+
+                if (qtd == 1)
                 {
-                    if (certificado.ValidationErrors.Count > 0)
-                        MessageBox.Show(certificado.ValidationErrors[0]);
+                    MessageBox.Show("Um certificado foi adicionado com sucesso!");
+                }
+                else if(qtd > 1)
+                {
+                    MessageBox.Show($"{qtd} certificados foram adicionados com sucesso!");
+                }
+                else
+                {
+
+                    var erro = certificados.Where(i => i.ValidationErrors.Count > 0).Select(i => i.ValidationErrors[0]).ToList();
+
+                    if(erro.Count() > 0)
+                    {
+                        string msgErros = "";
+
+                        for (int i = 0; i < erro.Count(); i++)
+                        {
+                            msgErros += erro[i].ToString() + "\n";  
+                        }
+
+                        throw new Exception(msgErros);
+                    }
                 }
             }
             catch (Exception ex)
             {
-                if (certificado.ValidationErrors.Count > 0)
-                    MessageBox.Show(certificado.ValidationErrors[0]);
-                else
-                    MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -101,7 +123,7 @@ namespace GerenciadorCertificados
             {
                 var certificado = new TCertificado()
                 {
-                    NomeCertificado = x509.FriendlyName,
+                    Nome = x509.FriendlyName,
                     CPF = "1234567890",
                     EmissorTipoO = "Lacuna Software",
                     Certificado = x509.Export(X509ContentType.Pkcs12),
@@ -186,25 +208,78 @@ namespace GerenciadorCertificados
 
         private void dtgCertificados_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if(dtgCertificados.Items.Count <= 0)
+            ArquivoSelecionado_SelectionChanged<TCertificado>(dtgCertificados, lblCertificadoSelecionado, "Certificado: ");
+
+            //if(dtgCertificados.Items.Count <= 0)
+            //{
+            //    lblCertificadoSelecionado.Content = "Certificado: ";
+            //    e.Handled = true;
+            //}
+
+            //var certificado = (TCertificado)dtgCertificados.SelectedItem;
+
+            //TextBlock textBlock = new TextBlock
+            //{
+            //    Style = (Style)Resources["lblItemSelecionado"],
+            //};
+
+            //if (certificado != null)
+            //    textBlock.Text = $"Certificado: {certificado.Nome}, {certificado.CPF}";
+            //else
+            //    textBlock.Text = "Certificado: ";
+
+            //lblCertificadoSelecionado.Content = textBlock;
+        }
+
+        private void dtgPDF_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ArquivoSelecionado_SelectionChanged<PDF>(dtgPDF, lblPDFSelecionado, "Arquivo: ");
+            //if (dtgPDF.Items.Count <= 0)
+            //{
+            //    lblPDFSelecionado.Content = "Arquivo: ";
+            //    e.Handled = true;
+            //}
+
+            //var pdf = (PDF)dtgPDF.SelectedItem;
+
+            //TextBlock textBlock = new TextBlock
+            //{
+            //    Style = (Style)Resources["lblItemSelecionado"],
+            //};
+
+            //if (pdf != null)
+            //    textBlock.Text = $"Arquivo: {pdf.Nome}";
+            //else
+            //    textBlock.Text = "Arquivo: ";
+
+            //lblPDFSelecionado.Content = textBlock;
+        }
+
+
+        private void ArquivoSelecionado_SelectionChanged<T>(DataGrid dtg, Label lbl, string content) where T : class
+        {
+            if(dtg ==  null || lbl == null) 
+                return;
+
+            if(dtg.Items.Count <= 0)
             {
-                lblCertificadoSelecionado.Content = "Certificado: ";
-                e.Handled = true;
+                lbl.Content = content;
+                return;
             }
 
-            var certificado = (TCertificado)dtgCertificados.SelectedItem;
+            var item = dtg.SelectedItem as T;
 
             TextBlock textBlock = new TextBlock
             {
                 Style = (Style)Resources["lblItemSelecionado"],
             };
 
-            if (certificado != null)
-                textBlock.Text = $"Certificado: {certificado.NomeCertificado}, {certificado.CPF}";
+            if (item != null)
+                textBlock.Text = $"{content} {item.GetType().GetProperty("Nome").GetValue(item).ToString()}";
             else
-                textBlock.Text = "Certificado: ";
+                textBlock.Text = $"{content}";
 
-            lblCertificadoSelecionado.Content = textBlock;
+            lbl.Content = textBlock;
         }
     }
 }

@@ -25,8 +25,8 @@ namespace GerenciadorCertificados.Repositorio
         {
             string sql = "  IF NOT EXISTS (SELECT 1 FROM TCertificado WHERE CPF = @CPF AND ChavePublica = @ChavePublica)" +
                          "  BEGIN" +
-                         "    INSERT INTO TCertificado (NomeCertificado, CPF, Email, Senha, ChavePrivada, ChavePublica, Emissor, EmissorTipoO, DataValidade, Certificado)" +
-                         "    VALUES (@NomeCertificado, @CPF, @Email, @Senha, @ChavePrivada, @ChavePublica, @Emissor, @EmissorTipoO, @DataValidade, @Certificado)" +
+                         "    INSERT INTO TCertificado (Nome, CPF, Email, Senha, ChavePrivada, ChavePublica, Emissor, EmissorTipoO, DataValidade, Certificado)" +
+                         "    VALUES (@Nome, @CPF, @Email, @Senha, @ChavePrivada, @ChavePublica, @Emissor, @EmissorTipoO, @DataValidade, @Certificado)" +
                          "  END";
 
             this.SQL = sql;
@@ -88,9 +88,9 @@ namespace GerenciadorCertificados.Repositorio
                         where += (where.Trim() == "" ? " WHERE " : " AND ") + "PK_Certificado = @PK_Certificado";
                     }
 
-                    if (!string.IsNullOrEmpty(certificado.NomeCertificado))
+                    if (!string.IsNullOrEmpty(certificado.Nome))
                     {
-                        where += (where.Trim() == "" ? " WHERE " : " AND ") + "NomeCertificado = @NomeCertificado COLLATE Latin1_General_CI_AI";
+                        where += (where.Trim() == "" ? " WHERE " : " AND ") + "Nome = @Nome COLLATE Latin1_General_CI_AI";
                     }
 
                     if (!string.IsNullOrEmpty(certificado.CPF))

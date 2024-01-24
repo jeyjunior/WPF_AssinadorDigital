@@ -24,7 +24,7 @@ BEGIN
         CREATE TABLE TCertificado
 		(
 			PK_Certificado INT IDENTITY(1,1) PRIMARY KEY,
-			NomeCertificado NVARCHAR(50) NOT NULL,
+			Nome NVARCHAR(50) NOT NULL,
 			CPF NVARCHAR(11) NOT NULL,
 			Email NVARCHAR(100),
 			Senha NVARCHAR(50) NULL,

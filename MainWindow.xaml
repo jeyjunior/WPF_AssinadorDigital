@@ -283,7 +283,7 @@
                 x:Name="btnAdicionarCertificado"
                 Grid.Column="0"
                 HorizontalAlignment="Center"
-                Click="btnAdicionarCertificado_Click"
+                Click="btnAdicionarCertificadoInstalado_Click"
                 Style="{StaticResource BtnEstiloPadrao}">
                 <TextBlock Style="{StaticResource TxbPadrao}" Text="Add Certificado" />
             </Button>
@@ -300,6 +300,7 @@
             <Button
                 x:Name="btnAtualizarGrid"
                 Grid.Column="2"
+                Visibility="Hidden"
                 HorizontalAlignment="Center"
                 Click="btnAtualizarGrid_Click"
                 Style="{StaticResource BtnEstiloPadrao}">

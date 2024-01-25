@@ -22,6 +22,7 @@ namespace GerenciadorCertificados
     {
         private readonly ITCertificadoRepositorio tCertificadoRepositorio;
         private List<PDF> pDFCollectin;
+        private List<TCertificado> certificadoCollectin;
 
         public MainWindow()
         {
@@ -30,6 +31,8 @@ namespace GerenciadorCertificados
             tCertificadoRepositorio = DISetup.DISetup.Container.GetInstance<ITCertificadoRepositorio>();
             pDFCollectin = new List<PDF>();
         }
+
+        #region Eventos
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
 
@@ -111,34 +114,30 @@ namespace GerenciadorCertificados
             }
         }
 
-        //Nao utilizar
+        
         private void btnAdicionarCertificadoInstalado_Click(object sender, RoutedEventArgs e)
         {
             X509Store x509Store = new X509Store(StoreName.My, StoreLocation.CurrentUser);
             x509Store.Open(OpenFlags.ReadOnly);
 
-            var x509 = x509Store.Certificates.Where(i => i.Subject.Contains("Wayne Enterprises, Inc")).FirstOrDefault();
+            X509Certificate2Collection x509Collection = x509Store.Certificates;
+            
+            certificadoCollectin = x509Collection
+                                        .Select(i => new TCertificado 
+                                        {
+                                            Nome = i.FriendlyName.Trim() != "" ? i.FriendlyName : i.Issuer.Replace("CN=",""),
+                                            CPF = "1234567890",
+                                            EmissorTipoO = "Lacuna Software",
+                                            Emissor = "Lacuna CA Test v1",
+                                            ChavePublica = i.GetPublicKeyString(),
+                                            Email = "teste@teste.com.br",
+                                            DataValidade = DateTime.Today.AddDays(180),
+                                            Senha = "1234",
+                                            ChavePrivada = null,
+                                            Certificado = i.Export(X509ContentType.Pkcs12),
+                                        }).ToList();
 
-            if (x509 != null)
-            {
-                var certificado = new TCertificado()
-                {
-                    Nome = x509.FriendlyName,
-                    CPF = "1234567890",
-                    EmissorTipoO = "Lacuna Software",
-                    Certificado = x509.Export(X509ContentType.Pkcs12),
-                    Emissor = "Lacuna CA Test v1",
-                    ChavePublica = x509.GetPublicKeyString(),
-                    Email = "teste@teste.com.br",
-                    DataValidade = DateTime.Today.AddDays(180),
-                    Senha = "1234",
-                    ChavePrivada = null,
-                };
-
-                var result = tCertificadoRepositorio.Adicionar(certificado);
-
-                MessageBox.Show(result ? $"Certificado adicionado com sucesso!" : "Falha ao salvar certificado");
-            }
+            dtgCertificados.ItemsSource = certificadoCollectin;
         }
 
         private void btnAtualizarGrid_Click(object sender, RoutedEventArgs e)
@@ -209,53 +208,17 @@ namespace GerenciadorCertificados
         private void dtgCertificados_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ArquivoSelecionado_SelectionChanged<TCertificado>(dtgCertificados, lblCertificadoSelecionado, "Certificado: ");
-
-            //if(dtgCertificados.Items.Count <= 0)
-            //{
-            //    lblCertificadoSelecionado.Content = "Certificado: ";
-            //    e.Handled = true;
-            //}
-
-            //var certificado = (TCertificado)dtgCertificados.SelectedItem;
-
-            //TextBlock textBlock = new TextBlock
-            //{
-            //    Style = (Style)Resources["lblItemSelecionado"],
-            //};
-
-            //if (certificado != null)
-            //    textBlock.Text = $"Certificado: {certificado.Nome}, {certificado.CPF}";
-            //else
-            //    textBlock.Text = "Certificado: ";
-
-            //lblCertificadoSelecionado.Content = textBlock;
         }
 
         private void dtgPDF_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ArquivoSelecionado_SelectionChanged<PDF>(dtgPDF, lblPDFSelecionado, "Arquivo: ");
-            //if (dtgPDF.Items.Count <= 0)
-            //{
-            //    lblPDFSelecionado.Content = "Arquivo: ";
-            //    e.Handled = true;
-            //}
-
-            //var pdf = (PDF)dtgPDF.SelectedItem;
-
-            //TextBlock textBlock = new TextBlock
-            //{
-            //    Style = (Style)Resources["lblItemSelecionado"],
-            //};
-
-            //if (pdf != null)
-            //    textBlock.Text = $"Arquivo: {pdf.Nome}";
-            //else
-            //    textBlock.Text = "Arquivo: ";
-
-            //lblPDFSelecionado.Content = textBlock;
         }
 
+        #endregion
 
+
+        #region Metodos
         private void ArquivoSelecionado_SelectionChanged<T>(DataGrid dtg, Label lbl, string content) where T : class
         {
             if(dtg ==  null || lbl == null) 
@@ -281,5 +244,7 @@ namespace GerenciadorCertificados
 
             lbl.Content = textBlock;
         }
+
+        #endregion
     }
 }

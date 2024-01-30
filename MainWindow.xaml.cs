@@ -4,6 +4,8 @@ using GerenciadorCertificados.Model;
 using Microsoft.Win32;
 using System.Data;
 using System.IO;
+using System.Runtime.ConstrainedExecution;
+using System.Security.Cryptography.Pkcs;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Windows;
@@ -114,7 +116,6 @@ namespace GerenciadorCertificados
             }
         }
 
-        
         private void btnAdicionarCertificadoInstalado_Click(object sender, RoutedEventArgs e)
         {
             X509Store x509Store = new X509Store(StoreName.My, StoreLocation.CurrentUser);
@@ -154,10 +155,29 @@ namespace GerenciadorCertificados
 
         private void btnAssinarPDF_Click(object sender, RoutedEventArgs e)
         {
-            //Obtem o certificado e o pdf dos respectivos grids
-            //Realizar as validações
-            //Assinar documento
-            //Exibir msg informando se o doc foi ou não assinado
+            var certificadoSelecionado = (TCertificado)dtgCertificados.SelectedItem;
+            var certificado = certificadoCollectin.FirstOrDefault(i => i.Nome == certificadoSelecionado.Nome);
+            var arquivoSelecionado = (PDF)dtgPDF.SelectedItem;
+            
+            if (certificado == null)
+                return;
+
+
+            var arquivoBytes = File.ReadAllBytes(arquivoSelecionado.Caminho);
+            ContentInfo pdf = new ContentInfo(arquivoBytes);
+            SignedCms signedCms = new SignedCms(pdf);
+
+            var cert = new X509Certificate2(certificado.Certificado);
+            CmsSigner cmsSigner = new CmsSigner(cert);
+            cmsSigner.IncludeOption = X509IncludeOption.WholeChain;
+
+            signedCms.ComputeSignature(cmsSigner);
+
+            byte[] signature = signedCms.Encode();
+
+            File.WriteAllBytes(arquivoSelecionado.Caminho, signature);
+
+            File.WriteAllBytes("arquivo_assinado.pdf", signature);
         }
 
         private void btnAdicionarPDF_Click(object sender, RoutedEventArgs e)
@@ -204,7 +224,6 @@ namespace GerenciadorCertificados
 
         }
 
-
         private void dtgCertificados_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ArquivoSelecionado_SelectionChanged<TCertificado>(dtgCertificados, lblCertificadoSelecionado, "Certificado: ");
@@ -214,7 +233,6 @@ namespace GerenciadorCertificados
         {
             ArquivoSelecionado_SelectionChanged<PDF>(dtgPDF, lblPDFSelecionado, "Arquivo: ");
         }
-
         #endregion
 
 
@@ -244,7 +262,6 @@ namespace GerenciadorCertificados
 
             lbl.Content = textBlock;
         }
-
         #endregion
     }
 }

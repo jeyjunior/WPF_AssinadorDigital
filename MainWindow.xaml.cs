@@ -166,55 +166,62 @@ namespace GerenciadorCertificados
                 return;
             }
 
-            var certificadoSelecionado = (TCertificado)dtgCertificados.SelectedItem;
-            var certificado = certificadoCollectin.FirstOrDefault(i => i.Nome == certificadoSelecionado.Nome);
-            var arquivoSelecionado = (PDF)dtgPDF.SelectedItem;
-            
-            if (certificado == null)
-                return;
-
-
-            var arquivoBytes = File.ReadAllBytes(arquivoSelecionado.Caminho);
-            ContentInfo pdf = new ContentInfo(arquivoBytes);
-            SignedCms signedCms = new SignedCms(pdf);
-
-            var cert = new X509Certificate2(certificado.Certificado);
-            CmsSigner cmsSigner = new CmsSigner(cert);
-            cmsSigner.IncludeOption = X509IncludeOption.WholeChain;
-
-            signedCms.ComputeSignature(cmsSigner);
-
-            byte[] signature = signedCms.Encode();
-
-            File.WriteAllBytes(arquivoSelecionado.Caminho, signature);
-
-            var destino = System.IO.Path.GetDirectoryName(arquivoSelecionado.Caminho);
-
-            if (!string.IsNullOrEmpty(destino))
+            try
             {
-                string nomeArquivoAssinado = $"{arquivoSelecionado.Nome}_Assinado.pdf";
-                string caminhoCompleto = System.IO.Path.Combine(destino, nomeArquivoAssinado);
+                var certificadoSelecionado = (TCertificado)dtgCertificados.SelectedItem;
+                var certificado = certificadoCollectin.FirstOrDefault(i => i.Nome == certificadoSelecionado.Nome);
+                var arquivoSelecionado = (PDF)dtgPDF.SelectedItem;
 
-                if (File.Exists(caminhoCompleto))
+                if (certificado == null)
+                    return;
+
+
+                var arquivoBytes = File.ReadAllBytes(arquivoSelecionado.Caminho);
+                ContentInfo pdf = new ContentInfo(arquivoBytes);
+                SignedCms signedCms = new SignedCms(pdf);
+
+                var cert = new X509Certificate2(certificado.Certificado);
+                CmsSigner cmsSigner = new CmsSigner(cert);
+                cmsSigner.IncludeOption = X509IncludeOption.WholeChain;
+
+                signedCms.ComputeSignature(cmsSigner);
+
+                byte[] signature = signedCms.Encode();
+
+                File.WriteAllBytes(arquivoSelecionado.Caminho, signature);
+
+                var destino = System.IO.Path.GetDirectoryName(arquivoSelecionado.Caminho);
+
+                if (!string.IsNullOrEmpty(destino))
                 {
-                    int num = 1;
+                    string nomeArquivoAssinado = $"{arquivoSelecionado.Nome}_Assinado.pdf";
+                    string caminhoCompleto = System.IO.Path.Combine(destino, nomeArquivoAssinado);
 
-                    while (File.Exists(caminhoCompleto))
+                    if (File.Exists(caminhoCompleto))
                     {
-                        nomeArquivoAssinado = $"{arquivoSelecionado.Nome}_Assinado({num}).pdf";
-                        caminhoCompleto = System.IO.Path.Combine(destino, nomeArquivoAssinado);
-                        num++;
+                        int num = 1;
+
+                        while (File.Exists(caminhoCompleto))
+                        {
+                            nomeArquivoAssinado = $"{arquivoSelecionado.Nome}_Assinado({num}).pdf";
+                            caminhoCompleto = System.IO.Path.Combine(destino, nomeArquivoAssinado);
+                            num++;
+                        }
                     }
+
+                    File.WriteAllBytes(caminhoCompleto, signature);
+
+                    MessageBox.Show("Arquivo assinado com sucesso!");
+                    Process.Start("explorer.exe", caminhoCompleto);
                 }
-
-                File.WriteAllBytes(caminhoCompleto, signature);
-
-                MessageBox.Show("Arquivo assinado com sucesso!");
-                Process.Start("explorer.exe", caminhoCompleto);
+                else
+                {
+                    MessageBox.Show("Houve uma falha ao tentar salvar o arquivo!");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("Houve uma falha ao tentar salvar o arquivo!");
+                MessageBox.Show(ex.Message);
             }
         }
 

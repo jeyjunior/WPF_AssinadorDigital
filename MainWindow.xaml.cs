@@ -3,8 +3,9 @@ using GerenciadorCertificados.Interfaces;
 using GerenciadorCertificados.Model;
 using Microsoft.Win32;
 using System.Data;
+using System.Diagnostics;
 using System.IO;
-using System.Runtime.ConstrainedExecution;
+
 using System.Security.Cryptography.Pkcs;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -15,7 +16,6 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace GerenciadorCertificados
@@ -155,6 +155,17 @@ namespace GerenciadorCertificados
 
         private void btnAssinarPDF_Click(object sender, RoutedEventArgs e)
         {
+            if(dtgCertificados.SelectedItem == null)
+            {
+                MessageBox.Show("É necessário selecionar um certificado");
+                return;
+            }
+            else if(dtgPDF.SelectedItem == null)
+            {
+                MessageBox.Show("É necessário selecionar um PDF");
+                return;
+            }
+
             var certificadoSelecionado = (TCertificado)dtgCertificados.SelectedItem;
             var certificado = certificadoCollectin.FirstOrDefault(i => i.Nome == certificadoSelecionado.Nome);
             var arquivoSelecionado = (PDF)dtgPDF.SelectedItem;
@@ -177,7 +188,34 @@ namespace GerenciadorCertificados
 
             File.WriteAllBytes(arquivoSelecionado.Caminho, signature);
 
-            File.WriteAllBytes("arquivo_assinado.pdf", signature);
+            var destino = System.IO.Path.GetDirectoryName(arquivoSelecionado.Caminho);
+
+            if (!string.IsNullOrEmpty(destino))
+            {
+                string nomeArquivoAssinado = $"{arquivoSelecionado.Nome}_Assinado.pdf";
+                string caminhoCompleto = System.IO.Path.Combine(destino, nomeArquivoAssinado);
+
+                if (File.Exists(caminhoCompleto))
+                {
+                    int num = 1;
+
+                    while (File.Exists(caminhoCompleto))
+                    {
+                        nomeArquivoAssinado = $"{arquivoSelecionado.Nome}_Assinado({num}).pdf";
+                        caminhoCompleto = System.IO.Path.Combine(destino, nomeArquivoAssinado);
+                        num++;
+                    }
+                }
+
+                File.WriteAllBytes(caminhoCompleto, signature);
+
+                MessageBox.Show("Arquivo assinado com sucesso!");
+                Process.Start("explorer.exe", caminhoCompleto);
+            }
+            else
+            {
+                MessageBox.Show("Houve uma falha ao tentar salvar o arquivo!");
+            }
         }
 
         private void btnAdicionarPDF_Click(object sender, RoutedEventArgs e)
@@ -196,12 +234,9 @@ namespace GerenciadorCertificados
 
             foreach (var item in arquivos)
             {
-                //C:\Users\jeyjr\Desktop\del\pdf para assinar\001.pdf
-                var indiceNome = item.LastIndexOf("\\");
-                var indiceFormato = item.LastIndexOf(".");
                 
-                var nome = item.Substring(indiceNome + 1);
-                var formato = item.Substring(indiceFormato + 1);
+                var nome = System.IO.Path.GetFileNameWithoutExtension(item);
+                var formato = System.IO.Path.GetExtension(item);
 
                 var pdf = new PDF
                 {
@@ -215,8 +250,6 @@ namespace GerenciadorCertificados
             }
 
             dtgPDF.ItemsSource = pDFCollectin;
-            //Selecionar o documento (Referencia em memoria)
-            //Exibir dados do documento selecionado no dtg
         }
 
         private void btnVerificarAssinatura_Click(object sender, RoutedEventArgs e)

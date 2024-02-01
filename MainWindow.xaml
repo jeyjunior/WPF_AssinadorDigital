@@ -11,6 +11,7 @@
     MinWidth="800"
     MinHeight="450"
     Loaded="Window_Loaded"
+    WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
 
     <Window.Resources>
@@ -300,10 +301,10 @@
             <Button
                 x:Name="btnAtualizarGrid"
                 Grid.Column="2"
-                Visibility="Hidden"
                 HorizontalAlignment="Center"
                 Click="btnAtualizarGrid_Click"
-                Style="{StaticResource BtnEstiloPadrao}">
+                Style="{StaticResource BtnEstiloPadrao}"
+                Visibility="Hidden">
                 <TextBlock Style="{StaticResource TxbPadrao}" Text="Atualizar" />
             </Button>
 

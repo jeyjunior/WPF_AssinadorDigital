@@ -1,6 +1,7 @@
 ﻿using GerenciadorCertificados.Entidades;
 using GerenciadorCertificados.Interfaces;
 using GerenciadorCertificados.Model;
+using GerenciadorCertificados.View;
 using Microsoft.Win32;
 using System.Data;
 using System.Diagnostics;
@@ -25,6 +26,7 @@ namespace GerenciadorCertificados
         private readonly ITCertificadoRepositorio tCertificadoRepositorio;
         private List<PDF> pDFCollectin;
         private List<TCertificado> certificadoCollectin;
+        
 
         public MainWindow()
         {
@@ -261,7 +263,8 @@ namespace GerenciadorCertificados
 
         private void btnVerificarAssinatura_Click(object sender, RoutedEventArgs e)
         {
-
+            var tela = new ValidarAssinatura();
+            tela.ShowDialog();
         }
 
         private void dtgCertificados_SelectionChanged(object sender, SelectionChangedEventArgs e)

@@ -35,6 +35,26 @@
             <!--<Setter Property="FontWeight" Value="Bold" />-->
         </Style>
 
+        <Style x:Key="BtnEstiloPadrao" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border
+                            Width="100"
+                            Height="30"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Background="#2d256e"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="5"
+                            Cursor="Hand">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
         <Style x:Key="BtnEstiloDestaque" TargetType="Button">
             <Setter Property="Template">
@@ -100,15 +120,44 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <Button
-            x:Name="btnFecharTela"
+        <Grid
+            x:Name="Botoes"
             Grid.Row="2"
             Grid.Column="1"
-            HorizontalAlignment="Right"
-            Click="btnFecharTela_Click"
-            Style="{StaticResource BtnEstiloDestaque}">
-            <TextBlock Style="{StaticResource TxbPadrao}" Text="Fechar" />
-        </Button>
+            HorizontalAlignment="Stretch">
+            <!--  Definindo quatro colunas para a segunda linha  -->
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="10*" />
+                <ColumnDefinition Width="10*" />
+                <ColumnDefinition Width="10*" />
+            </Grid.ColumnDefinitions>
 
+            <Button
+                x:Name="btnFecharTela"
+                Grid.Column="0"
+                HorizontalAlignment="Center"
+                Click="btnFecharTela_Click"
+                Style="{StaticResource BtnEstiloPadrao}">
+                <TextBlock Style="{StaticResource TxbPadrao}" Text="Fechar" />
+            </Button>
+
+            <Button
+                x:Name="btnCarregarPDF"
+                Grid.Column="1"
+                HorizontalAlignment="Center"
+                Click="btnCarregarPDF_Click"
+                Style="{StaticResource BtnEstiloPadrao}">
+                <TextBlock Style="{StaticResource TxbPadrao}" Text="Carregar PDF" />
+            </Button>
+
+            <Button
+                x:Name="btnValidar"
+                Grid.Column="2"
+                HorizontalAlignment="Center"
+                Click="btnValidar_Click"
+                Style="{StaticResource BtnEstiloDestaque}">
+                <TextBlock Style="{StaticResource TxbPadrao}" Text="Validar" />
+            </Button>
+        </Grid>
     </Grid>
 </Window>

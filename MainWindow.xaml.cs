@@ -2,22 +2,14 @@
 using GerenciadorCertificados.Interfaces;
 using GerenciadorCertificados.Model;
 using GerenciadorCertificados.View;
-using Microsoft.Win32;
-using System.Data;
-using System.Diagnostics;
-using System.IO;
-
-using System.Security.Cryptography.Pkcs;
 using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Windows;
+using System.Security.Cryptography.Pkcs;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using System.Windows;
+using System.IO;
+using System.Diagnostics;
+using System.Data;
+using Microsoft.Win32;
 
 namespace GerenciadorCertificados
 {
@@ -26,7 +18,6 @@ namespace GerenciadorCertificados
         private readonly ITCertificadoRepositorio tCertificadoRepositorio;
         private List<PDF> pDFCollectin;
         private List<TCertificado> certificadoCollectin;
-        
 
         public MainWindow()
         {

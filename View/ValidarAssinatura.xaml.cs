@@ -9,12 +9,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace GerenciadorCertificados.View
 {
@@ -65,8 +59,8 @@ namespace GerenciadorCertificados.View
             try
             {
                 byte[] pdfBytes = File.ReadAllBytes(path);
-
                 SignedCms signedCms = new SignedCms();
+
                 signedCms.Decode(pdfBytes);
 
                 SignerInfoCollection signers = signedCms.SignerInfos;
@@ -85,7 +79,7 @@ namespace GerenciadorCertificados.View
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Erro ao verificar a assinatura do PDF: {ex.Message}");
+                MessageBox.Show($"O PDF não está assinado digitalmente.");
             }
         }
     }

@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.Data;
 using Microsoft.Win32;
 
+
 namespace GerenciadorCertificados
 {
     public partial class MainWindow : Window
@@ -159,18 +160,23 @@ namespace GerenciadorCertificados
                 return;
             }
 
+            AssinandoComSignedCms();
+        }
+
+        private void AssinandoComSignedCms()
+        {
             try
             {
                 var certificadoSelecionado = (TCertificado)dtgCertificados.SelectedItem;
                 var certificado = certificadoCollectin.FirstOrDefault(i => i.Nome == certificadoSelecionado.Nome);
                 var arquivoSelecionado = (PDF)dtgPDF.SelectedItem;
 
-                if (certificado == null)
+                if (certificado == null || arquivoSelecionado == null)
                     return;
 
+                var arquivoOriginal = File.ReadAllBytes(arquivoSelecionado.Caminho);
 
-                var arquivoBytes = File.ReadAllBytes(arquivoSelecionado.Caminho);
-                ContentInfo pdf = new ContentInfo(arquivoBytes);
+                ContentInfo pdf = new ContentInfo(arquivoOriginal);
                 SignedCms signedCms = new SignedCms(pdf);
 
                 var cert = new X509Certificate2(certificado.Certificado);
@@ -180,8 +186,6 @@ namespace GerenciadorCertificados
                 signedCms.ComputeSignature(cmsSigner);
 
                 byte[] signature = signedCms.Encode();
-
-                File.WriteAllBytes(arquivoSelecionado.Caminho, signature);
 
                 var destino = System.IO.Path.GetDirectoryName(arquivoSelecionado.Caminho);
 
@@ -204,7 +208,7 @@ namespace GerenciadorCertificados
 
                     File.WriteAllBytes(caminhoCompleto, signature);
 
-                    MessageBox.Show("Arquivo assinado com sucesso!");
+                    MessageBox.Show("Cópia assinada do arquivo criada com sucesso!");
                     Process.Start("explorer.exe", caminhoCompleto);
                 }
                 else
@@ -216,6 +220,7 @@ namespace GerenciadorCertificados
             {
                 MessageBox.Show(ex.Message);
             }
+
         }
 
         private void btnAdicionarPDF_Click(object sender, RoutedEventArgs e)

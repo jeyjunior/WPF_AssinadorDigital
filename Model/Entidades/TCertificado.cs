@@ -19,6 +19,7 @@ namespace GerenciadorCertificados.Entidades
         public string Emissor { get; set; }
         public string EmissorTipoO { get; set; }
         public DateTime? DataValidade { get; set; }
+        public DateTime? DataAssinatura { get; set; }
         public byte[] Certificado { get; set; }
 
         public List<string> ValidationErrors { get; set; } = new List<string>();

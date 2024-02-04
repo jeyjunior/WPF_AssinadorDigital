@@ -111,11 +111,37 @@
 
             <DataGrid.Columns>
                 <DataGridTextColumn
-                    Width="60"
-                    MinWidth="60"
-                    MaxWidth="60"
-                    Binding="{Binding Assinado}"
-                    Header="Assinado"
+                    Width="80*"
+                    MinWidth="80"
+                    Binding="{Binding Nome}"
+                    Header="Nome"
+                    Visibility="Visible" />
+                <DataGridTextColumn
+                    Width="80*"
+                    MinWidth="80"
+                    Binding="{Binding EmissorTipoO}"
+                    Header="EmissorTipoO "
+                    Visibility="Visible" />
+
+                <DataGridTextColumn
+                    Width="80*"
+                    MinWidth="80"
+                    Binding="{Binding Emissor}"
+                    Header="Emissor"
+                    Visibility="Visible" />
+
+                <DataGridTextColumn
+                    Width="80"
+                    MinWidth="80"
+                    Binding="{Binding DataAssinatura}"
+                    Header="Data Assinatura"
+                    Visibility="Visible" />
+
+                <DataGridTextColumn
+                    Width="80"
+                    MinWidth="80"
+                    Binding="{Binding DataValidade}"
+                    Header="Data Validade"
                     Visibility="Visible" />
             </DataGrid.Columns>
         </DataGrid>

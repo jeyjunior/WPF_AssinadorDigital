@@ -1,5 +1,5 @@
 ﻿using Dapper;
-using GerenciadorCertificados.Entidades;
+using GerenciadorCertificados.Controller.Entidades;
 using GerenciadorCertificados.Interfaces;
 using System;
 using System.Collections.Generic;

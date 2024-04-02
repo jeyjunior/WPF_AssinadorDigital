@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GerenciadorCertificados.Model
+namespace GerenciadorCertificados.Controller
 {
     public class PDF
     {

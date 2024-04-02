@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
-namespace GerenciadorCertificados.Entidades
+namespace GerenciadorCertificados.Controller.Entidades
 {
     public class TCertificado
     {

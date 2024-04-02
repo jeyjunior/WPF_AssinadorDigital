@@ -1,4 +1,4 @@
-﻿using GerenciadorCertificados.Entidades;
+﻿using GerenciadorCertificados.Controller.Entidades;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;

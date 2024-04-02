@@ -1,6 +1,4 @@
-﻿using GerenciadorCertificados.Entidades;
-using GerenciadorCertificados.Interfaces;
-using GerenciadorCertificados.Model;
+﻿using GerenciadorCertificados.Interfaces;
 using GerenciadorCertificados.View;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Cryptography.Pkcs;
@@ -10,6 +8,8 @@ using System.IO;
 using System.Diagnostics;
 using System.Data;
 using Microsoft.Win32;
+using GerenciadorCertificados.Controller;
+using GerenciadorCertificados.Controller.Entidades;
 
 
 namespace GerenciadorCertificados
